@@ -3,10 +3,19 @@
 
 ## Loading and preprocessing the data
 
+```{r}
+zip <- 'activity.zip'
+activity <- read.csv(unz(zip, 'activity.csv'))
+daily <- aggregate(activity['steps'], by=activity['date'], FUN='sum', na.rm=TRUE)
+```
 
 ## What is mean total number of steps taken per day?
 
-
+```{r}
+hist(daily$steps, main='Histogram of steps/day', xlab='Steps')
+mean(daily$steps)
+median(daily$steps)
+```
 
 ## What is the average daily activity pattern?
 
