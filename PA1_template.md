@@ -100,11 +100,11 @@ median(dailyI$steps)
 
 
 ```r
-impute$weekday <- factor(ifelse(weekdays(as.POSIXct(impute$date)) %in% c("Saturday","Sunday"), "Weekend", "Weekday"))
-
+impute$weekday <- factor(ifelse(weekdays(as.POSIXct(impute$date)) %in% c("Saturday","Sunday"),
+                                "Weekend", "Weekday"))
 byDay <- aggregate(impute['steps'], by=c(impute['interval'], impute['weekday']), FUN='mean')
-
-xyplot(byDay$steps ~ byDay$interval | byDay$weekday, type='l', xlab='5 minute interval', ylab='Avg. steps', layout=c(1,2))
+xyplot(byDay$steps ~ byDay$interval | byDay$weekday, type='l', xlab='5 minute interval',
+       ylab='Avg. steps', layout=c(1,2))
 ```
 
 ![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5.png) 
