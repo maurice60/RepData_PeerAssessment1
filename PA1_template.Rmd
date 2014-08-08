@@ -7,6 +7,7 @@
 zip <- 'activity.zip'
 activity <- read.csv(unz(zip, 'activity.csv'))
 daily <- aggregate(activity['steps'], by=activity['date'], FUN='sum', na.rm=TRUE)
+bySlice <- aggregate(activity['steps'], by=activity['interval'], FUN='mean', na.rm=TRUE)
 ```
 
 ## What is mean total number of steps taken per day?
@@ -19,7 +20,10 @@ median(daily$steps)
 
 ## What is the average daily activity pattern?
 
-
+```{r}
+plot(bySlice$interval, bySlice$steps, type='l', xlab='5 minute interval', ylab='Avg. steps')
+bySlice$interval[which.max(bySlice$steps)]
+```
 
 ## Imputing missing values
 
