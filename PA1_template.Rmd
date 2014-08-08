@@ -4,6 +4,7 @@
 ## Loading and preprocessing the data
 
 ```{r}
+library(lattice)
 zip <- 'activity.zip'
 activity <- read.csv(unz(zip, 'activity.csv'))
 daily <- aggregate(activity['steps'], by=activity['date'], FUN='sum', na.rm=TRUE)
@@ -13,7 +14,7 @@ bySlice <- aggregate(activity['steps'], by=activity['interval'], FUN='mean', na.
 ## What is mean total number of steps taken per day?
 
 ```{r}
-hist(daily$steps, main='Histogram of steps/day', xlab='Steps')
+histogram(daily$steps, main='Histogram of steps/day', xlab='Steps')
 mean(daily$steps)
 median(daily$steps)
 ```
@@ -21,11 +22,13 @@ median(daily$steps)
 ## What is the average daily activity pattern?
 
 ```{r}
-plot(bySlice$interval, bySlice$steps, type='l', xlab='5 minute interval', ylab='Avg. steps')
+xyplot(bySlice$steps ~ bySlice$interval, type='l', xlab='5 minute interval', ylab='Avg. steps')
 bySlice$interval[which.max(bySlice$steps)]
 ```
 
 ## Imputing missing values
+
+I will take the average value for each time slot to replace the missing data.
 
 ```{r}
 impute <- activity
@@ -36,9 +39,18 @@ for (i in which(!cc)) {
   impute[i,'steps'] <- bySlice[bySlice$interval == ti, 'steps']
 }
 dailyI <- aggregate(impute['steps'], by=impute['date'], FUN='sum')
-hist(dailyI$steps, main='Histogram of steps/day', xlab='Steps')
+histogram(dailyI$steps, main='Histogram of steps/day', xlab='Steps')
 mean(dailyI$steps)
 median(dailyI$steps)
 ```
 
 ## Are there differences in activity patterns between weekdays and weekends?
+
+```{r}
+impute$weekday <- factor(ifelse(weekdays(as.POSIXct(impute$date)) %in% c("Saturday","Sunday"), "Weekend", "Weekday"))
+
+byDay <- aggregate(impute['steps'], by=c(impute['interval'], impute['weekday']), FUN='mean')
+
+xyplot(byDay$steps ~ byDay$interval | byDay$weekday, type='l', xlab='5 minute interval', ylab='Avg. steps', layout=c(1,2))
+```
+
