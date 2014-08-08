@@ -27,6 +27,18 @@ bySlice$interval[which.max(bySlice$steps)]
 
 ## Imputing missing values
 
-
+```{r}
+impute <- activity
+cc <- complete.cases(activity)
+sum(! cc)
+for (i in which(!cc)) {
+  ti <- impute[i,'interval']
+  impute[i,'steps'] <- bySlice[bySlice$interval == ti, 'steps']
+}
+dailyI <- aggregate(impute['steps'], by=impute['date'], FUN='sum')
+hist(dailyI$steps, main='Histogram of steps/day', xlab='Steps')
+mean(dailyI$steps)
+median(dailyI$steps)
+```
 
 ## Are there differences in activity patterns between weekdays and weekends?
